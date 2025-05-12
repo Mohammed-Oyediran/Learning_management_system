@@ -1,9 +1,11 @@
--- DATABASE
+-- DATABASE CREATION
+-- This script creates a database for a Learning Management System (LMS) and populates it with sample data.
 DROP DATABASE IF EXISTS LMS;
 CREATE DATABASE IF NOT EXISTS LMS;
 USE LMS;
 
--- STUDENTS
+-- STUDENTS TABLE
+-- This table stores information about students.
 CREATE TABLE Students (
     studentID INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50) NOT NULL,
@@ -12,7 +14,8 @@ CREATE TABLE Students (
     enrollmentDate DATE NOT NULL
 );
 
--- INSTRUCTORS
+-- INSTRUCTORS TABLE
+-- This table stores information about instructors.
 CREATE TABLE Instructors (
     instructorID INT AUTO_INCREMENT PRIMARY KEY,
     firstName VARCHAR(50) NOT NULL,
@@ -21,7 +24,9 @@ CREATE TABLE Instructors (
     hireDate DATE
 );
 
--- COURSES
+-- COURSES TABLE
+-- This table stores information about courses.
+-- Each course is taught by an instructor. (MANY-TO-ONE: Courses ↔ Instructors)
 CREATE TABLE Courses (
     courseID INT AUTO_INCREMENT PRIMARY KEY,
     courseName VARCHAR(100) NOT NULL,
@@ -40,7 +45,7 @@ CREATE TABLE Enrollments (
     FOREIGN KEY (courseID) REFERENCES Courses(courseID)
 );
 
--- ASSIGNMENTS
+-- ASSIGNMENTS (MANY-TO-ONE: Assignments ↔ Courses)
 CREATE TABLE Assignments (
     assignmentID INT AUTO_INCREMENT PRIMARY KEY,
     courseID INT NOT NULL,
@@ -50,7 +55,7 @@ CREATE TABLE Assignments (
     FOREIGN KEY (courseID) REFERENCES Courses(courseID)
 );
 
--- SUBMISSIONS
+-- SUBMISSIONS (MANY-TO-ONE: Submissions ↔ Assignments)
 CREATE TABLE Submissions (
     submissionID INT AUTO_INCREMENT PRIMARY KEY,
     assignmentID INT NOT NULL,
@@ -61,7 +66,7 @@ CREATE TABLE Submissions (
     FOREIGN KEY (studentID) REFERENCES Students(studentID)
 );
 
--- GRADES
+-- GRADES (MANY-TO-ONE: Grades ↔ Submissions)
 CREATE TABLE Grades (
     gradeID INT AUTO_INCREMENT PRIMARY KEY,
     submissionID INT NOT NULL,
@@ -72,7 +77,7 @@ CREATE TABLE Grades (
 );
 
 
--- Insert data into students
+-- Insert data into students table
 INSERT INTO students (studentID, firstName, lastName, email, enrollmentDate) VALUES
 (1, 'Danielle', 'Johnson', 'jeffreydoyle@hotmail.com', '2021-08-17'),
 (2, 'Joy', 'Gardner', 'johnsonjeffery@hotmail.com', '2021-02-21'),
@@ -95,7 +100,7 @@ INSERT INTO students (studentID, firstName, lastName, email, enrollmentDate) VAL
 (19, 'James', 'Murphy', 'danielwhite@yahoo.com', '2022-04-09'),
 (20, 'Brianna', 'Hall', 'jonescrystal@jones.com', '2024-01-22');
 
--- Insert data into instructors
+-- Insert data into instructors table
 INSERT INTO instructors (instructorID, firstName, lastName, email, hireDate) VALUES
 (1, 'Chad', 'Young', 'ambercummings@hotmail.com', '2021-05-09'),
 (2, 'Barbara', 'Sanchez', 'glee@hotmail.com', '2020-03-27'),
@@ -103,7 +108,7 @@ INSERT INTO instructors (instructorID, firstName, lastName, email, hireDate) VAL
 (4, 'Brian', 'Clark', 'blackmonica@gmail.com', '2023-02-10'),
 (5, 'John', 'Leblanc', 'williamsyvette@gmail.com', '2019-01-14');
 
--- Insert data into courses
+-- Insert data into courses table
 INSERT INTO courses (courseID, courseName, courseDescription, instructorID) VALUES
 (1, 'Course Better', 'Coach magazine degree husband around.', 2),
 (2, 'Course Property', 'Game before animal up national.', 3),
@@ -116,7 +121,7 @@ INSERT INTO courses (courseID, courseName, courseDescription, instructorID) VALU
 (9, 'Course Leave', 'Surface according sing central here.', 5),
 (10, 'Course Pretty', 'You available defense enter value thing these.', 4);
 
--- Insert data into enrollments
+-- Insert data into enrollments table
 INSERT INTO enrollments (studentID, courseID, enrollmentDate) VALUES
 (1, 2, '2023-06-26'),
 (1, 6, '2022-03-30'),
@@ -139,7 +144,7 @@ INSERT INTO enrollments (studentID, courseID, enrollmentDate) VALUES
 (18, 9, '2022-06-13'),
 (7, 7, '2023-03-26');
 
--- Insert data into assignments
+-- Insert data into assignments table
 INSERT INTO assignments (assignmentID, courseID, title, assignmentDescription, dueDate) VALUES
 (1, 3, 'Assignment 1', 'Expect just myself few worker southern.', '2023-09-20'),
 (2, 4, 'Assignment 2', 'Available movement brother.', '2023-03-14'),
@@ -162,7 +167,7 @@ INSERT INTO assignments (assignmentID, courseID, title, assignmentDescription, d
 (19, 1, 'Assignment 19', 'Space series central.', '2025-08-25'),
 (20, 4, 'Assignment 20', 'Issue we TV perhaps professional by.', '2026-01-09');
 
--- Insert data into submissions
+-- Insert data into submissions table
 INSERT INTO submissions (submissionID, assignmentID, studentID, submissionDate, content) VALUES
 (1, 5, 19, '2026-03-26', 'Finally impact I fast camera inside wait. Past feeling nature a. Involve oil pressure let kind. Memory soldier where save probably.'),
 (2, 8, 3, '2025-01-03', 'Note voice four west operation personal next. Cup edge reason impact.'),
@@ -185,7 +190,7 @@ INSERT INTO submissions (submissionID, assignmentID, studentID, submissionDate, 
 (19, 18, 10, '2024-10-20', 'Police raise situation.'),
 (20, 16, 5, '2024-01-24', 'Week physical less nor. Large under north play person ten physical character. Kind field ever argue medical financial later. Hard expert popular within.');
 
--- Insert data into grades
+-- Insert data into grades table
 INSERT INTO grades (gradeID, submissionID, grade, feedback, gradedDate) VALUES
 (1, 1, 71.87, 'Word base position always remain yard.', '2023-04-30'),
 (2, 2, 88.35, 'Visit writer include policy author.', '2023-09-16'),
@@ -208,7 +213,7 @@ INSERT INTO grades (gradeID, submissionID, grade, feedback, gradedDate) VALUES
 (19, 19, 74.99, 'Explain again surface.', '2023-09-14'),
 (20, 20, 99.84, 'Eight strong nature.', '2023-05-31');
 
--- Sample code to test database
+-- Sample code to test database creation
 SELECT st.studentID, st.firstName, s.submissionDate, g.grade FROM submissions AS s
 JOIN students AS st
 JOIN grades as g
